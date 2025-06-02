@@ -134,7 +134,7 @@ export async function loginController(request, response) {
             return response.status(400).json({
                 message: "Check your password",
                 error: true,
-                success: false
+                success: false.valueOf
             })
         }
 
@@ -239,7 +239,7 @@ export async function updateUserDetails(request, response) {
             ...(password && { password: hashPassword}),
         })
         return response.json({
-            message: "updated user details, Kumbaya!",
+            message: "Updated user details, Kumbaya!",
             error: false,
             success: true,
             data: updateUser
@@ -301,59 +301,60 @@ export async function forgotPasswordController(request, response) {
 }
 
 export async function verifyForgotPasswordOtp(request, response) {
-    try{
-        const { email, otp } = request.body
+  try {
+    const { email, otp } = request.body;
 
-        if(!email || !otp) {
-            return response.status(400).json({
-                message: "Provide the required fields",
-                error: true,
-                success: false
-            })
-        }
-
-        const currentTime = new Date().toISOString
-        if(user.forgot_password_expiry < currentTime) {
-            return response.status(400).json({
-                message: "OTP expired",
-                error: true,
-                success: false
-            })
-        }
-
-        if(otp !== user.forgot_password_otp) {
-            return response.status(440).json({
-                message: "OTP invalid",
-                error: true,
-                success: false
-            })
-        }
-        
-        return response.json({
-            message: "OTP verified, Kumbaya!",
-            success: true,
-            error: true
-        })
-
-        const user = await UserModel.findByIdAndUpdate({ email })
-        if(!user) {
-            return response.status(400).json({
-                message: "User not found",
-                error: true,
-                success: false
-            })
-        }
-
-
-
-    } catch(error) {
-        return response.status(500).json({
-            message: error.message || error,
-            error: true,
-            success: false
-        })
+    if (!email || !otp) {
+      return response.status(400).json({
+        message: "Provide the required fields",
+        error: true,
+        success: false
+      });
     }
+
+    const user = await UserModel.findOne({ email });
+
+    if (!user) {
+      return response.status(404).json({
+        message: "User not found",
+        error: true,
+        success: false
+      });
+    }
+
+    const currentTime = new Date().toISOString();
+
+    if (user.forgot_password_expiry < currentTime) {
+      return response.status(400).json({
+        message: "OTP expired",
+        error: true,
+        success: false
+      });
+    }
+
+    if (otp !== user.forgot_password_otp) {
+      return response.status(400).json({
+        message: "OTP invalid",
+        error: true,
+        success: false
+      });
+    }
+
+    return response.json({
+      message: "OTP verified, Kumbaya!",
+      success: true,
+      error: false
+    });
+
+  } catch (error) {
+    return response.status(500).json({
+      message: error.message || error,
+      error: true,
+      success: false
+    });
+  }
 }
+
 
 export async function resetPassword(request, response) {
     try{

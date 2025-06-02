@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { FaRegCircleUser } from "react-icons/fa6"
 
 const Header = () => {
+  //const location = useLocation()
   return (
     <header className='h-20 shadow-md sticky top-0 bg-[#D3D3FF]'>
       <div className='container mx-auto flex items-center h-full px-4 justify-between'>
