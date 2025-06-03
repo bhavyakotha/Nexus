@@ -9,5 +9,5 @@ body{
     font-optical-sizing: auto;
     font-weight: 200;
     font-style: normal;
-    @apply bg-[#FAF0E6]
+    @apply bg-[#FAF0E6] text-neutral-700
 }

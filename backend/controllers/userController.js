@@ -141,6 +141,11 @@ export async function loginController(request, response) {
         const accessToken = await generatedAccessToken(user._id)
         const refreshToken = await generatedRefreshToken(user._id)
 
+
+        const updateUser = await UserModel.findByIdAndUpdate(user?._id, {
+            last_login_date: new Date()
+        })
+
         const cookiesOption = {
             httpOnly: true,
             secure: true,
@@ -340,6 +345,12 @@ export async function verifyForgotPasswordOtp(request, response) {
       });
     }
 
+    const updateUser = await UserModel.findByIdAndUpdate(user._id, {
+        forgot_password_otp : "",
+        forgot_password_expiry: ""
+    })
+
+
     return response.json({
       message: "OTP verified, Kumbaya!",
       success: true,
@@ -408,7 +419,7 @@ export async function resetPassword(request, response) {
 export async function refreshToken(request, response) {
     try{
         const refreshToken = request.cookies.refreshToken || 
-        request?.header?.authorization?.split(" ")[1]
+        request?.headers?.authorization?.split(" ")[1]
 
 
         if(!refreshToken){
@@ -459,6 +470,30 @@ export async function refreshToken(request, response) {
             message: error.message || error,
             success: false,
             error: true
+        })
+    }
+}
+
+export async function userDetails(request, response) {
+    try{
+        const userId = request.userId
+
+        const user = await UserModel.findById(userId).select('-password -refresh_token')
+
+        return response.json({
+            message: 'User Details',
+            data: user,
+            error: false,
+            success: true
+        })
+
+    }
+    
+    catch(error) {
+        return response.status(500).json({
+            message:"Something is wrong",
+            error: true,
+            success: false
         })
     }
 }
