@@ -23,7 +23,7 @@ const Header = () => {
   }
 
   return (
-    <header className='h-20 shadow-md sticky top-0 bg-[#D3D3FF]'>
+    <header className='h-20 shadow-md sticky z-40 top-0 bg-[#D3D3FF]'>
       <div className='container mx-auto flex items-center h-full px-4 justify-between'>
         <div className='h-full'>
           <Link tp ={"/"} className='h-full flex justify-center items-center'>

@@ -6,6 +6,8 @@ import morgan from 'morgan'
 import helmet from 'helmet'
 import connectDB from './config/connectDB.js'
 import userRouter from './route/userRoute.js'
+import categoryRouter from './route/categoryRoute.js'
+import uploadRouter from './route/uploadRoute.js'
 
 dotenv.config()
 
@@ -15,6 +17,11 @@ app.use(cors({
     origin: process.env.FRONTEND_URL
 }))
 
+app.use((req, res, next) => {
+  console.log(`[REQUEST] ${req.method} ${req.originalUrl}`);
+  next();
+});
+
 app.use(express.json())
 app.use(cookieParser())
 app.use(morgan("dev"))
@@ -23,6 +30,12 @@ app.use(helmet({
 }))
 
 const PORT = process.env.PORT || 3000
+
+
+app.use("/api/user", userRouter)
+app.use("/api/category", categoryRouter)
+app.use("/api/file", uploadRouter)
+
 
 app.get("/", (request, response) => {
     response.json({
@@ -37,4 +50,3 @@ connectDB().then(() => {
     })
 })
 
-app.use("/api/user", userRouter)
