@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import UploadSubCategoryModel from '../components/UploadSubCategoryModel.jsx'
+import UploadSubCategoryModel from '../components/UploadSubCategoryModel'
 import AxiosToastError from '../utils/AxiosToastError'
 import Axios from '../utils/Axios'
 import SummaryApi from '../common/SummaryApi'
-//import DisplayTable from '../components/DisplayTable'
+import DisplayTable from '../components/DisplayTable'
 import { createColumnHelper } from '@tanstack/react-table'
-//import ViewImage from '../components/ViewImage'
+import ViewImage from '../components/ViewImage'
 import { LuPencil } from "react-icons/lu";
 import { MdDelete  } from "react-icons/md";
 import { HiPencil } from "react-icons/hi";
-//import EditSubCategory from '../components/EditSubCategory'
-import CofirmBox from '../components/ConfirmBox'
+import EditSubCategory from '../components/EditSubCategory'
+import ConfirmBox from '../components/ConfirmBox'
 import toast from 'react-hot-toast'
 
 const SubCategoryPage = () => {
@@ -58,7 +58,6 @@ const SubCategoryPage = () => {
     columnHelper.accessor('image',{
       header : "Image",
       cell : ({row})=>{
-        console.log("row",)
         return <div className='flex justify-center items-center'>
             <img 
                 src={row.original.image}
@@ -133,11 +132,14 @@ const SubCategoryPage = () => {
     <section className=''>
         <div className='p-2   bg-white shadow-md flex items-center justify-between'>
             <h2 className='font-semibold'>Sub Category</h2>
-            <button onClick={()=>setOpenAddSubCategory(true)} className='text-sm border border-primary-200 hover:bg-primary-200 px-3 py-1 rounded'>Add Sub Category</button>
+            <button onClick={()=>setOpenAddSubCategory(true)} className='text-sm border border-primary-200 hover:bg-primary-100 bg-primary-200 hover:text-white px-3 py-1 rounded'>Add Sub Category</button>
         </div>
 
         <div className='overflow-auto w-full max-w-[95vw]'>
-            Displaytable
+            <DisplayTable
+                data={data}
+                column={column}
+            />
         </div>
 
 
@@ -155,7 +157,7 @@ const SubCategoryPage = () => {
           <ViewImage url={ImageURL} close={()=>setImageURL("")}/>
         }
 
-        {/*{
+        {
           openEdit && 
           <EditSubCategory 
             data={editData} 
@@ -163,11 +165,11 @@ const SubCategoryPage = () => {
             fetchData={fetchSubCategory}
           />
         }
-          */}
+
 
         {
           openDeleteConfirmBox && (
-            <CofirmBox 
+            <ConfirmBox 
               cancel={()=>setOpenDeleteConfirmBox(false)}
               close={()=>setOpenDeleteConfirmBox(false)}
               confirm={handleDeleteSubCategory}

@@ -6,15 +6,16 @@ import Axios from '../utils/Axios';
 import SummaryApi from '../common/SummaryApi';
 import toast from 'react-hot-toast';
 import AxiosToastError from '../utils/AxiosToastError';
-import { useEffect } from 'react';
 
-const UploadSubCategoryModel = ({close, fetchData}) => {
+const EditSubCategory = ({close,data,fetchData}) => {
     const [subCategoryData,setSubCategoryData] = useState({
-        name : "",
-        image : "",
-        category : []
+        _id : data._id,
+        name : data.name,
+        image : data.image,
+        category : data.category || []
     })
-    const allCategory = useSelector(state => state.product?.allCategory || [])
+    const allCategory = useSelector(state => state.product.allCategory)
+
 
     const handleChange = (e)=>{
         const { name, value} = e.target 
@@ -60,7 +61,7 @@ const UploadSubCategoryModel = ({close, fetchData}) => {
 
         try {
             const response = await Axios({
-                ...SummaryApi.createSubCategory,
+                ...SummaryApi.updateSubCategory,
                 data : subCategoryData
             })
 
@@ -85,7 +86,7 @@ const UploadSubCategoryModel = ({close, fetchData}) => {
     <section className='fixed top-0 right-0 bottom-0 left-0 bg-neutral-800 bg-opacity-70 z-50 flex items-center justify-center p-4'>
         <div className='w-full max-w-5xl bg-white p-4 rounded'>
             <div className='flex items-center justify-between gap-3'>
-                <h1 className='font-semibold'>Add Sub Category</h1>
+                <h1 className='font-semibold'>Edit Sub Category</h1>
                 <button onClick={close}>
                     <IoClose size={25}/>
                 </button>
@@ -118,7 +119,7 @@ const UploadSubCategoryModel = ({close, fetchData}) => {
                                 }
                             </div>
                             <label htmlFor='uploadSubCategoryImage'>
-                                <div className='px-4 py-1 border border-primary-100 rounded hover:bg-primary-100 bg-primary-200 hover:text-white hover:text-neutral-900 cursor-pointer  '>
+                                <div className='px-4 py-1 border border-primary-100 rounded hover:bg-primary-100 bg-primary-200 hover:text-neutral-900 cursor-pointer  '>
                                     Upload Image
                                 </div>
                                 <input 
@@ -134,21 +135,23 @@ const UploadSubCategoryModel = ({close, fetchData}) => {
                     <div className='grid gap-1'>
                         <label>Select Category</label>
                         <div className='border focus-within:border-primary-200 rounded'>
+                            {/*display value**/}
                             <div className='flex flex-wrap gap-2'>
                                 {
                                     subCategoryData.category.map((cat,index)=>{
                                         return(
-                                            <label key={cat._id+"selectedValue"} className='bg-white shadow-md px-1 m-1 flex items-center gap-2'>
+                                            <p key={cat._id+"selectedValue"} className='bg-white shadow-md px-1 m-1 flex items-center gap-2'>
                                                 {cat.name}
                                                 <div className='cursor-pointer hover:text-red-600' onClick={()=>handleRemoveCategorySelected(cat._id)}>
                                                     <IoClose size={20}/>
                                                 </div>
-                                            </label>
+                                            </p>
                                         )
                                     })
                                 }
                             </div>
 
+                            {/*select category**/}
                             <select
                                 className='w-full p-2 bg-transparent outline-none border'
                                 onChange={(e)=>{
@@ -190,4 +193,4 @@ const UploadSubCategoryModel = ({close, fetchData}) => {
   )
 }
 
-export default UploadSubCategoryModel
+export default EditSubCategory
